@@ -431,8 +431,7 @@ h2, h3 {
 
 .post-list,
 .videos,
-.list,
-.pagination {
+.list {
   padding-left: 0;
   list-style: none;
 }
@@ -1086,13 +1085,122 @@ kbd {
   }
 }
 
-.list > li {
-  display: flex;
-  flex-direction: column;
+.list {
+  grid-template-columns: repeat(3, 1fr);
+
+  > li {
+    display: flex;
+    flex-direction: column;
+  }
+
+  @include media-query($on-laptop) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @include media-query($on-palm) {
+    grid-template-columns: 1fr;
+  }
 }
 
-.list .description {
-  flex-grow: 1;
+.source {
+  margin: 0 0 1em;
+
+  p {
+    margin: 0.25em 0 0;
+  }
+}
+
+.official {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25em;
+  margin-left: 0.5em;
+  border-radius: 999px;
+  padding: 0 0.6em;
+  background-color: color-mix(in srgb, $blue 12%, #fff);
+  font-size: 13px;
+  font-weight: 700;
+  color: $blue;
+  white-space: nowrap;
+
+  .icon {
+    margin: 0;
+  }
+}
+
+.package-footer {
+  display: flex;
+  align-items: center;
+  gap: 1em;
+  margin: auto 0 1em;
+
+  time {
+    margin-left: auto;
+  }
+}
+
+.package-footer time,
+.sources .pushed {
+  font-size: $small-font-size;
+  color: $grey;
+}
+
+.more-sources {
+  margin: 0;
+  border: 0;
+  padding: 0;
+  background: none;
+  font: inherit;
+  font-size: $small-font-size;
+  color: $grey;
+  text-decoration: underline;
+  cursor: pointer;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+.sources {
+  box-sizing: border-box;
+  width: min(560px, calc(100% - 32px));
+  overflow-wrap: anywhere;
+  @include titled-card;
+  padding: 0 20px;
+
+  &::backdrop {
+    background-color: color-mix(in srgb, $ink 40%, transparent);
+  }
+
+  h4 {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1em;
+
+    // It takes the focus on opening only so that the close button doesn't.
+    &:focus {
+      outline: none;
+    }
+  }
+
+  button {
+    display: grid;
+    border: 0;
+    padding: 0;
+    background: none;
+    color: inherit;
+    cursor: pointer;
+
+    .icon {
+      width: 1.25em;
+      height: 1.25em;
+      margin: 0;
+    }
+  }
+
+  .source + .source {
+    border-top: 1px solid $line;
+    padding-top: 1em;
+  }
 }
 
 .videos {
@@ -1228,25 +1336,48 @@ kbd {
   font: inherit;
 }
 
-.tag {
-  display: inline-block;
-  margin-right: 6px;
-  border-radius: 999px;
-  padding: 2px 10px;
-  background-color: $line;
-  font-size: 13px;
-  color: $grey;
+.package-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+
+  .search {
+    flex: 1 1 260px;
+    width: auto;
+  }
 }
 
-.pagination {
-  li {
-    display: inline;
-    margin-right: 12px;
+.filter {
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid $line;
+  border-radius: 8px;
+  padding: 0 16px;
+  background-color: #fff;
+  color: $grey;
+  cursor: pointer;
+  -webkit-user-select: none;
+  user-select: none;
+
+  input {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
   }
 
-  .active a {
-    color: inherit;
-    font-weight: 700;
-    text-decoration: none;
+  &:has(:checked) {
+    border-color: $blue;
+    background-color: $blue;
+    color: #fff;
   }
+
+  &:has(:focus-visible) {
+    outline: 2px solid;
+    outline-offset: 2px;
+  }
+}
+
+#package-list:has(.featured-filter:checked) .list > li:not([data-featured]),
+#package-list:has(.official-filter:checked) .list > li:not([data-official]) {
+  display: none;
 }
